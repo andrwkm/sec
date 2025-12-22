@@ -4,7 +4,37 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 		<meta charset="UTF-8">
 		<title>Pook</title>
-		<link rel="stylesheet" type="text/css" href="./css/format.css">
+		<link rel="stylesheet" type="text/css" href="./css/format.css?v=2">
+		<style>
+			/* Image size control */
+			#img {
+				max-width: 90vw;
+				max-height: 70vh;
+				width: auto;
+				height: auto;
+				object-fit: contain;
+				display: block;
+				margin: 0 auto;
+			}
+
+			/* Center the image container */
+			#imgTxt {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				text-align: center;
+				padding: 20px;
+			}
+
+			/* Make text more readable */
+			#Txt {
+				font-size: 1.2em;
+				margin-bottom: 15px;
+				color: #fff;
+				text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+			}
+		</style>
 	</head>
 
 	<body style="margin:0px">
@@ -14,9 +44,8 @@
 		</audio>
 		<canvas></canvas>
 		<div id="imgTxt">
-			<span id="Txt"></span> <br />
-			<span id="tmp"></span>
-			<img id="img" src="">
+			<span id="Txt"></span>
+			<img id="img" src="" alt="Memory">
 		</div>
 		<div id="heartTxt">
 			<span id="clickMe">Click!</span>
@@ -34,40 +63,46 @@
 			</div>
 		</div>
 
-    	<div id = "typeDiv">
+    	<div id="typeDiv">
         	<span id="txt1"></span> <br />
         	<span id="txt2"></span>
     	</div>		
 
-		<script >
+		<script>
 			var ok = 0;
 			var flag = 1;
 			var myImage = document.getElementById("img");
 			var myTxt = document.getElementById("Txt");
-			var imageArray = ["pics/pic1.png", "pics/pic2.png", "pics/pic3.png", "pics/pic4.png", "pics/pic5.png", "pics/pic6.png", 
-			"pics/pic7.png", "pics/pic8.png", "pics/pic9.png", "pics/pic10.png", "pics/pic11.png", "pics/pic12.png", "pics/pic13.png",
-			"pics/pic14.png", "pics/pic15.png", "pics/pic16.png", "pics/pic17.png", "pics/pic18.png"];
+			var imageArray = [
+				"pics/pic1.png", "pics/pic2.png", "pics/pic3.png", "pics/pic4.png", 
+				"pics/pic5.png", "pics/pic6.png", "pics/pic7.png", "pics/pic8.png", 
+				"pics/pic9.png", "pics/pic10.png", "pics/pic11.png", "pics/pic12.png", 
+				"pics/pic13.png", "pics/pic14.png", "pics/pic15.png", "pics/pic16.png", 
+				"pics/pic17.png", "pics/pic18.png"
+			];
 			var imageIndex = 0;
-			var txtArray = ["1", 
-			"2",
-			"3",
-			"4",
-			"5",
-			"6",
-			"7",
-			"8",
-			"9",
-			"10",
-			"11",
-			"12",
-			"13",
-			"14",
-			"15",
-			"16",
-			"17",
-			"18"];
+			var txtArray = [
+				"Caption 1", 
+				"Caption 2",
+				"Caption 3",
+				"Caption 4",
+				"Caption 5",
+				"Caption 6",
+				"Caption 7",
+				"Caption 8",
+				"Caption 9",
+				"Caption 10",
+				"Caption 11",
+				"Caption 12",
+				"Caption 13",
+				"Caption 14",
+				"Caption 15",
+				"Caption 16",
+				"Caption 17",
+				"Caption 18"
+			];
 			
-			 var len = imageArray.length;
+			var len = imageArray.length;
 			var t = 0;
 		</script>
 		
