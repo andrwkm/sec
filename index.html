@@ -4,12 +4,12 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 		<meta charset="UTF-8">
 		<title>Pook</title>
-		<link rel="stylesheet" type="text/css" href="./css/format.css?v=2">
+		<link rel="stylesheet" type="text/css" href="./css/format.css?v=3">
 		<style>
 			/* Image size control */
 			#img {
 				max-width: 90vw;
-				max-height: 70vh;
+				max-height: 60vh;
 				width: auto;
 				height: auto;
 				object-fit: contain;
@@ -17,22 +17,40 @@
 				margin: 0 auto;
 			}
 
-			/* Center the image container */
+			/* Image and text container - position it properly */
 			#imgTxt {
+				position: relative;
+				z-index: 10;
 				display: flex;
 				flex-direction: column;
 				align-items: center;
 				justify-content: center;
 				text-align: center;
 				padding: 20px;
+				margin-bottom: 50px; /* Space between image and timer */
 			}
 
-			/* Make text more readable */
+			/* Caption text styling */
 			#Txt {
 				font-size: 1.2em;
 				margin-bottom: 15px;
 				color: #fff;
 				text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+				display: block;
+				z-index: 11;
+			}
+
+			/* Timer container - make sure it's below the image */
+			#content {
+				position: relative;
+				z-index: 5;
+				margin-top: 30px;
+			}
+
+			/* Heart button container */
+			#heartTxt {
+				position: relative;
+				z-index: 15;
 			}
 		</style>
 	</head>
@@ -78,7 +96,7 @@
 				"pics/pic5.png", "pics/pic6.png", "pics/pic7.png", "pics/pic8.png", 
 				"pics/pic9.png", "pics/pic10.png", "pics/pic11.png", "pics/pic12.png", 
 				"pics/pic13.png", "pics/pic14.png", "pics/pic15.png", "pics/pic16.png", 
-				"pics/pic17.png", "pics/pic18.png"
+				"pics/pic17.png"
 			];
 			var imageIndex = 0;
 			var txtArray = [
@@ -99,7 +117,6 @@
 				"Caption 15",
 				"Caption 16",
 				"Caption 17",
-				"Caption 18"
 			];
 			
 			var len = imageArray.length;
