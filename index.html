@@ -4,7 +4,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 		<meta charset="UTF-8">
 		<title>Pooka</title>
-		<link rel="stylesheet" type="text/css" href="./css/format.css?v=6">
+		<link rel="stylesheet" type="text/css" href="./css/format.css?v=7">
 		<style>
 			/* Canvas background */
 			canvas {
@@ -74,14 +74,18 @@
 				text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
 			}
 
-			/* Heart button positioning */
+			/* Heart button positioning - CENTERED */
 			#heartTxt {
 				position: fixed;
 				bottom: 100px;
-				left: 50%;
-				transform: translateX(-50%);
+				left: 0;
+				right: 0;
 				z-index: 100;
 				text-align: center;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
 			}
 
 			#clickMe {
@@ -95,6 +99,14 @@
 			#heart {
 				position: relative;
 				z-index: 101;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+
+			#button {
+				display: block;
+				margin: 0 auto;
 			}
 
 			/* Type div positioning */
