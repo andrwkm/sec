@@ -4,7 +4,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 		<meta charset="UTF-8">
 		<title>Pooka</title>
-		<link rel="stylesheet" type="text/css" href="./css/format.css?v=7">
+		<link rel="stylesheet" type="text/css" href="./css/format.css?v=8">
 		<style>
 			/* Canvas background */
 			canvas {
@@ -24,7 +24,7 @@
 				width: auto;
 				height: auto;
 				object-fit: contain;
-				display: block;
+				display: none; /* Hide initially until first image loads */
 				margin: 20px auto;
 			}
 
@@ -174,7 +174,7 @@
 
 		<div id="imgTxt">
 			<span id="Txt"></span>
-			<img id="img" src="" alt="Memory">
+			<img id="img" src="" alt="">
 		</div>
 
 		<div id="heartTxt">
@@ -223,6 +223,11 @@
 			];
 			var len = imageArray.length;
 			var t = 0;
+
+			// Show image when it loads
+			myImage.onload = function() {
+				myImage.style.display = 'block';
+			};
 		</script>
 		
 		<script type="text/javascript" src="./js/stars.js"></script>
