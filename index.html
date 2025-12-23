@@ -139,21 +139,27 @@
 				if (!musicStarted) {
 					backgroundMusic.play().then(() => {
 						musicStarted = true;
-						musicOverlay.classList.add('hidden');
+						musicOverlay.style.display = 'none'; // Force hide
 					}).catch(error => {
-						console.log('Music autoplay failed:', error);
+						console.log('Music play failed:', error);
+						musicOverlay.style.display = 'none'; // Hide even if failed
 					});
 				}
 			}
 
+			// Start music on tap/click
+			musicOverlay.addEventListener('click', startMusic);
+
 			// Try autoplay first (works on desktop)
-			backgroundMusic.play().then(() => {
-				musicStarted = true;
-				musicOverlay.classList.add('hidden');
-			}).catch(() => {
-				// Autoplay failed (mobile) - show overlay
-				musicOverlay.style.display = 'flex';
-			});
+			window.addEventListener('load', function() {
+				backgroundMusic.play().then(() => {
+					musicStarted = true;
+					musicOverlay.style.display = 'none';
+				}).catch(() => {
+					// Autoplay blocked - overlay already visible
+					musicOverlay.style.display = 'flex';
+				});
+			});	
 
 			// Start music on tap/click
 			musicOverlay.addEventListener('click', startMusic);
