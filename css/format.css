@@ -1,88 +1,115 @@
 #typeDiv {
-	position: absolute;
-	top: 45%;
-	left: 0;
-	right: 0;
-	margin: auto;
-	width: 100%;
-	height: 10%;
+	position: fixed;
+	bottom: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 15;
 	text-align: center;
+	transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+#typeDiv.hidden {
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
 }
 
 #txt1 {
 	font-size: 16px;
 	text-align: center;
 	color: white;
+	text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
 }
+
 #txt2 {
 	font-size: 16px;
 	text-align: center;
 	color: white;
+	text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
 }
 
-#content{
-	position: absolute;
-	top: 1%;
-	left: 0;
-	right: 0;
-	margin: auto;
-	width: 100%;
-	height: 20%;
+#content {
+	position: fixed;
+	top: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 20;
+	text-align: center;
+	transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-#together{
+#content.hidden {
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+}
+
+#together {
 	font-size: 25px;
 	text-align: center;
 	color: white;
+	text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
 }
 
-#timer{
+#timer {
 	text-align: center;
 	color: white;
+	text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
 }
 
-#d{
+#d {
 	font-size: 19px;
 }
 
-#h{
+#h {
 	font-size: 19px;
 }
 
-#m{
+#m {
 	font-size: 19px;
 }
 
-#s{
+#s {
 	font-size: 19px;
 }
 
-#heartTxt{
-	position: absolute;
-	display: table;
-	vertical-align: middle;
-	top: 80%;
+#heartTxt {
+	position: fixed;
+	bottom: 100px;
 	left: 0;
 	right: 0;
-	margin: auto;
-	width: 10%;
-	height: 8%;
+	z-index: 100;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-#clickMe{
-	display: inline-block;
+#heartTxt.hidden {
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+}
+
+#clickMe {
+	display: block;
 	font-size: 16px;
-	width: 100%;
 	text-align: center;
 	color: white;
+	margin-bottom: 10px;
+	text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
 }
 
-#heart{
-	width: 100%;
-	height: 100%;
+#heart {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
-#button{
+#button {
 	background-image: url("../pic/love.png");
 	background-repeat: no-repeat;
 	background-size: contain;
@@ -91,49 +118,241 @@
 	outline: none;
 	background-position: center;
 	transition: 0.1s;
-	width: 100%;
-	height: 100%;
-
+	width: 80px;
+	height: 80px;
+	display: block;
+	margin: 0 auto;
+	cursor: pointer;
 }
 
 #button:active {
-	width: 92%;
-	height: 92%;
+	width: 74px;
+	height: 74px;
 }
 
-#imgTxt{
-	position: absolute;
-	display: table;
-	vertical-align: middle;
-	top: 20%;
-	left: 0;
-	right: 0;
-	margin: auto;
-	width: 100%;
-	height: 50%;
+#imgTxt {
+	position: relative;
+	z-index: 10;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	padding-top: 120px;
+	min-height: 100vh;
 }
 
-#img{
-	display: block;
-	left: 0;
-	right: 0;
-	margin: auto;
+#img {
+	max-width: 50vw;
+	max-height: 50vh;
 	width: auto;
+	height: auto;
+	object-fit: contain;
+	display: block;
+	margin: 20px auto;
+}
+
+#Txt {
+	font-size: 17px;
+	margin-bottom: 20px;
+	color: white;
+	text-align: center;
+	text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+	display: block;
+}
+
+#tmp {
+	display: inline-block;
+	font-size: 17px;
+	width: 100%;
+	text-align: center;
+	color: white;
+}
+
+/* Canvas background */
+canvas {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
 	height: 100%;
+	z-index: 1;
+	pointer-events: none;
 }
 
-#Txt{
-	display: inline-block;
-	font-size: 17px;
-	width: 100%;
-	text-align: center;
-	color: white;
+/* Video Section Styles */
+#videoSection {
+	position: relative;
+	z-index: 10;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 120px 20px 80px 20px;
+	background: linear-gradient(135deg, rgba(255, 182, 193, 0.15) 0%, rgba(255, 218, 224, 0.15) 100%);
+	margin-top: 0;
 }
 
-#tmp{
-	display: inline-block;
-	font-size: 17px;
-	width: 100%;
+#videoSection h2 {
+	color: #fff;
+	font-size: 2.5em;
+	margin-bottom: 20px;
 	text-align: center;
-	color: white;
+	text-shadow: 3px 3px 8px rgba(0,0,0,0.8);
+	font-family: 'Georgia', serif;
+	letter-spacing: 2px;
+}
+
+#videoSection p {
+	color: #fff;
+	font-size: 1.3em;
+	margin-bottom: 40px;
+	text-align: center;
+	text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+	max-width: 600px;
+	line-height: 1.6;
+	font-style: italic;
+}
+
+.video-container {
+	position: relative;
+	width: 60vh;
+	max-width: 90vw;
+	margin: 0 auto;
+	border-radius: 20px;
+	overflow: visible;
+	box-shadow: 0 20px 60px rgba(255, 105, 180, 0.4),
+	            0 0 40px rgba(255, 182, 193, 0.3);
+	border: 3px solid rgba(255, 255, 255, 0.2);
+	background: rgba(0, 0, 0, 0.3);
+}
+
+.video-container video {
+	width: 100%;
+	height: auto;
+	display: block;
+	transform: rotate(90deg);
+	transform-origin: center center;
+}
+
+/* Decorative hearts around video */
+.video-container::before,
+.video-container::after {
+	content: '♥';
+	position: absolute;
+	color: rgba(255, 105, 180, 0.6);
+	font-size: 3em;
+	text-shadow: 0 0 20px rgba(255, 105, 180, 0.8);
+	animation: heartFloat 3s ease-in-out infinite;
+	z-index: 5;
+}
+
+.video-container::before {
+	top: -40px;
+	left: -40px;
+	animation-delay: 0s;
+}
+
+.video-container::after {
+	bottom: -40px;
+	right: -40px;
+	animation-delay: 1.5s;
+}
+
+@keyframes heartFloat {
+	0%, 100% {
+		transform: translateY(0) scale(1);
+		opacity: 0.6;
+	}
+	50% {
+		transform: translateY(-20px) scale(1.1);
+		opacity: 1;
+	}
+}
+
+/* Play button overlay */
+.play-overlay {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 80px;
+	height: 80px;
+	background: rgba(255, 105, 180, 0.8);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	z-index: 10;
+}
+
+.play-overlay:hover {
+	background: rgba(255, 105, 180, 1);
+	transform: translate(-50%, -50%) scale(1.1);
+}
+
+.play-overlay::after {
+	content: '';
+	width: 0;
+	height: 0;
+	border-left: 25px solid white;
+	border-top: 15px solid transparent;
+	border-bottom: 15px solid transparent;
+	margin-left: 5px;
+}
+
+.play-overlay.hidden {
+	display: none;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+	#img {
+		max-width: 80vw;
+		max-height: 40vh;
+	}
+	
+	#content {
+		top: 10px;
+	}
+
+	#together {
+		font-size: 1.1em;
+	}
+
+	#timer {
+		font-size: 0.9em;
+	}
+
+	#imgTxt {
+		padding-top: 100px;
+	}
+
+	#heartTxt {
+		bottom: 80px;
+	}
+
+	#videoSection {
+		padding: 100px 15px 60px 15px;
+	}
+
+	#videoSection h2 {
+		font-size: 1.8em;
+	}
+
+	#videoSection p {
+		font-size: 1.1em;
+	}
+
+	.video-container {
+		width: 95%;
+	}
+
+	.video-container::before,
+	.video-container::after {
+		font-size: 2em;
+	}
 }
