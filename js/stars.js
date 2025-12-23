@@ -1,3 +1,5 @@
+//import utils from "./utils"
+
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 
@@ -9,6 +11,20 @@ window.addEventListener("resize", function() {
     canvas.height = window.innerHeight;     
     init()
 });
+
+/*
+const mouse = {
+    x: innerWidth / 2,
+    y: innerHeight / 2
+}
+
+
+// Event Listeners
+addEventListener('mousemove', event => {
+    mouse.x = event.clientX
+    mouse.y = event.clientY
+})
+*/
 
 // Objects
 function Star(x, y, radius, color) {
@@ -39,6 +55,7 @@ Star.prototype.draw = function() {
 Star.prototype.update = function() {
     this.draw()
 
+    //When ball hits bottom of screen
     if(this.y + this.radius + this.velocity.y > canvas.height - groundHeight){
         this.velocity.y = -this.velocity.y * this.friction
         this.shatter()
@@ -47,6 +64,7 @@ Star.prototype.update = function() {
         this.velocity.y += this.gravity
     }
 
+    //Hits side of screen
     if(this.x + this.radius + this.velocity.x > canvas.width || this.x - this.radius <= 0){
         this.velocity.x = -this.velocity.x * this.friction
         this.shatter()
@@ -54,6 +72,7 @@ Star.prototype.update = function() {
 
     this.x += this.velocity.x
     this.y += this.velocity.y
+
 }
 
 Star.prototype.shatter = function(){
@@ -61,6 +80,7 @@ Star.prototype.shatter = function(){
     for(let i = 0; i < 8; i++){
         miniStars.push(new MiniStar(this.x, this.y, 2))
     }
+
 }
 
 function MiniStar(x, y, radius, color){
@@ -103,85 +123,18 @@ MiniStar.prototype.update = function() {
     this.opacity -= 0.0001 * this.ttl
 }
 
-// Create majestic mountain peaks like the reference image
-let mountainCanvas;
-
-function createMountainCanvas() {
-    mountainCanvas = document.createElement('canvas');
-    mountainCanvas.width = canvas.width;
-    mountainCanvas.height = canvas.height;
-    const mCtx = mountainCanvas.getContext('2d');
-    
-    // Create a single majestic peak
-    function drawMajesticPeak(centerX, baseY, height, width, color, jaggedness) {
-        mCtx.beginPath();
-        
-        const leftBase = centerX - width / 2;
-        const rightBase = centerX + width / 2;
-        const peakY = baseY - height;
-        
-        // Start from left base
-        mCtx.moveTo(leftBase, baseY);
-        
-        // Left slope with jagged edges
-        const leftSteps = 8;
-        for (let i = 0; i <= leftSteps; i++) {
-            const progress = i / leftSteps;
-            const x = leftBase + (centerX - leftBase) * progress;
-            const y = baseY - (height * progress) + (Math.random() - 0.5) * jaggedness * (1 - progress);
-            mCtx.lineTo(x, y);
-        }
-        
-        // Peak with slight rounding
-        mCtx.lineTo(centerX, peakY);
-        
-        // Right slope with jagged edges
-        const rightSteps = 8;
-        for (let i = 0; i <= rightSteps; i++) {
-            const progress = i / rightSteps;
-            const x = centerX + (rightBase - centerX) * progress;
-            const y = peakY + (height * progress) - height + (Math.random() - 0.5) * jaggedness * progress;
-            mCtx.lineTo(x, y);
-        }
-        
-        mCtx.lineTo(rightBase, baseY);
-        mCtx.closePath();
-        
-        mCtx.fillStyle = color;
-        mCtx.fill();
+function creatMountainRange(mountainAmount, height, color){
+    for(let i = 0; i < mountainAmount; i++){
+        const mountainWidth = canvas.width / mountainAmount
+        c.beginPath()
+        c.moveTo(i * mountainWidth, canvas.height)
+        c.lineTo(i * mountainWidth + mountainWidth + 0.2*canvas.height, canvas.height)
+        c.lineTo(i * mountainWidth + mountainWidth / 2, canvas.height - height)
+        c.lineTo(i * mountainWidth - 0.2*canvas.height, canvas.height)
+        c.fillStyle = color
+        c.fill()
+        c.closePath()
     }
-    
-    // Create mountain range with multiple layers and peaks
-    function drawMountainLayer(peaks, baseY, minHeight, maxHeight, color, jaggedness) {
-        peaks.forEach(peak => {
-            const height = minHeight + Math.random() * (maxHeight - minHeight);
-            const width = canvas.width / 3 + Math.random() * (canvas.width / 4);
-            drawMajesticPeak(peak.x, baseY, height, width, color, jaggedness);
-        });
-    }
-    
-    // Back layer - distant mountains (lighter, smaller)
-    const backPeaks = [
-        { x: canvas.width * 0.15 },
-        { x: canvas.width * 0.5 },
-        { x: canvas.width * 0.85 }
-    ];
-    drawMountainLayer(backPeaks, canvas.height * 0.75, canvas.height * 0.15, canvas.height * 0.30, '#4a5a68', 5);
-    
-    // Middle layer - medium mountains
-    const middlePeaks = [
-        { x: canvas.width * 0.3 },
-        { x: canvas.width * 0.7 }
-    ];
-    drawMountainLayer(middlePeaks, canvas.height * 0.80, canvas.height * 0.25, canvas.height * 0.40, '#384551', 10);
-    
-    // Front layer - closest mountains (darkest, tallest)
-    const frontPeaks = [
-        { x: canvas.width * 0.2 },
-        { x: canvas.width * 0.55 },
-        { x: canvas.width * 0.88 }
-    ];
-    drawMountainLayer(frontPeaks, canvas.height * 0.85, canvas.height * 0.30, canvas.height * 0.50, '#26333E', 15);
 }
 
 // Implementation
@@ -196,7 +149,6 @@ let ticker = 0
 let randomSpawnRate = 75
 const groundHeight = 0.09 * canvas.height
 let inf = 1e9
-
 function init() {
     stars = []
     miniStars = []
@@ -208,13 +160,11 @@ function init() {
         const radius = Math.random() * 3
         backgroundStars.push(new Star(x, y, radius, 'white'))
     }
-    
-    createMountainCanvas();
 }
 
 // Animation Loop
 function animate() {
-    c.clearRect(0, 0, canvas.width, canvas.height)
+    c.clearRect(0, 0, 0, canvas.height)
     c.fillStyle = backgroundGradient
     c.fillRect(0, 0, canvas.width, canvas.height)
 
@@ -222,13 +172,11 @@ function animate() {
         backgroundStar.draw()
     })
 
-    if(flag && mountainCanvas) {
-        c.drawImage(mountainCanvas, 0, 0);
-    }
-    
+    if(flag) creatMountainRange(1, canvas.height * 0.7, '#384551')
+    if(flag) creatMountainRange(2, canvas.height * 0.6, '#2B3843')
+    if(flag) creatMountainRange(3, canvas.height * 0.4, '#26333E')
     c.fillStyle = '#182028'
     c.fillRect(0, canvas.height - groundHeight, canvas.width, groundHeight)
-    
     stars.forEach((star, index) => {
         star.update();
         if(star.radius == 0){
