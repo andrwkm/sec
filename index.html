@@ -4,7 +4,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 		<meta charset="UTF-8">
 		<title>Pooka</title>
-		<link rel="stylesheet" type="text/css" href="./css/format.css?v=9">
+		<link rel="stylesheet" type="text/css" href="./css/format.css?v=11">
 		<style>
 			/* Canvas background */
 			canvas {
@@ -24,7 +24,7 @@
 				width: auto;
 				height: auto;
 				object-fit: contain;
-				display: block; /* Changed from none - always show */
+				display: block;
 				margin: 20px auto;
 			}
 
@@ -125,6 +125,132 @@
 				text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
 			}
 
+			/* NEW: Video Section Styles */
+			#videoSection {
+				position: relative;
+				z-index: 10;
+				min-height: 100vh;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				padding: 80px 20px;
+				background: linear-gradient(135deg, rgba(255, 182, 193, 0.15) 0%, rgba(255, 218, 224, 0.15) 100%);
+				margin-top: 30vh;
+			}
+
+			#videoSection h2 {
+				color: #fff;
+				font-size: 2.5em;
+				margin-bottom: 20px;
+				text-align: center;
+				text-shadow: 3px 3px 8px rgba(0,0,0,0.8);
+				font-family: 'Georgia', serif;
+				letter-spacing: 2px;
+			}
+
+			#videoSection p {
+				color: #fff;
+				font-size: 1.3em;
+				margin-bottom: 40px;
+				text-align: center;
+				text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+				max-width: 600px;
+				line-height: 1.6;
+				font-style: italic;
+			}
+
+			.video-container {
+				position: relative;
+				width: 80%;
+				max-width: 900px;
+				margin: 0 auto;
+				border-radius: 20px;
+				overflow: hidden;
+				box-shadow: 0 20px 60px rgba(255, 105, 180, 0.4),
+				            0 0 40px rgba(255, 182, 193, 0.3);
+				border: 3px solid rgba(255, 255, 255, 0.2);
+				background: rgba(0, 0, 0, 0.3);
+			}
+
+			.video-container video {
+				width: 100%;
+				height: auto;
+				display: block;
+			}
+
+			/* Decorative hearts around video */
+			.video-container::before,
+			.video-container::after {
+				content: '♥';
+				position: absolute;
+				color: rgba(255, 105, 180, 0.6);
+				font-size: 3em;
+				text-shadow: 0 0 20px rgba(255, 105, 180, 0.8);
+				animation: heartFloat 3s ease-in-out infinite;
+				z-index: 5;
+			}
+
+			.video-container::before {
+				top: -40px;
+				left: -40px;
+				animation-delay: 0s;
+			}
+
+			.video-container::after {
+				bottom: -40px;
+				right: -40px;
+				animation-delay: 1.5s;
+			}
+
+			@keyframes heartFloat {
+				0%, 100% {
+					transform: translateY(0) scale(1);
+					opacity: 0.6;
+				}
+				50% {
+					transform: translateY(-20px) scale(1.1);
+					opacity: 1;
+				}
+			}
+
+			/* Play button overlay */
+			.play-overlay {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				width: 80px;
+				height: 80px;
+				background: rgba(255, 105, 180, 0.8);
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				cursor: pointer;
+				transition: all 0.3s ease;
+				z-index: 10;
+			}
+
+			.play-overlay:hover {
+				background: rgba(255, 105, 180, 1);
+				transform: translate(-50%, -50%) scale(1.1);
+			}
+
+			.play-overlay::after {
+				content: '';
+				width: 0;
+				height: 0;
+				border-left: 25px solid white;
+				border-top: 15px solid transparent;
+				border-bottom: 15px solid transparent;
+				margin-left: 5px;
+			}
+
+			.play-overlay.hidden {
+				display: none;
+			}
+
 			/* Mobile responsive */
 			@media (max-width: 768px) {
 				#img {
@@ -150,6 +276,28 @@
 
 				#heartTxt {
 					bottom: 80px;
+				}
+
+				#videoSection {
+					margin-top: 20vh;
+					padding: 60px 15px;
+				}
+
+				#videoSection h2 {
+					font-size: 1.8em;
+				}
+
+				#videoSection p {
+					font-size: 1.1em;
+				}
+
+				.video-container {
+					width: 95%;
+				}
+
+				.video-container::before,
+				.video-container::after {
+					font-size: 2em;
 				}
 			}
 		</style>
@@ -187,7 +335,21 @@
 		<div id="typeDiv">
 			<span id="txt1"></span> <br />
 			<span id="txt2"></span>
-		</div>		
+		</div>
+
+		<!-- NEW: Romantic Video Section -->
+		<section id="videoSection">
+			<h2>Our Special Moments ♥</h2>
+			<p>Every moment with you is a treasure. Here's to all the memories we've made and all the adventures yet to come.</p>
+			
+			<div class="video-container">
+				<div class="play-overlay" id="playButton"></div>
+				<video id="romanticVideo" controls>
+					<source src="video/our-video.mp4" type="video/mp4">
+					Your browser does not support the video tag.
+				</video>
+			</div>
+		</section>
 
 		<script>
 			var ok = 0;
@@ -229,6 +391,29 @@
 			myImage.onload = function() {
 				console.log('Image loaded successfully:', this.src);
 			};
+
+			// Video play button functionality
+			const videoElement = document.getElementById('romanticVideo');
+			const playButtonOverlay = document.getElementById('playButton');
+
+			if (playButtonOverlay && videoElement) {
+				playButtonOverlay.addEventListener('click', function() {
+					videoElement.play();
+					playButtonOverlay.classList.add('hidden');
+				});
+
+				videoElement.addEventListener('play', function() {
+					playButtonOverlay.classList.add('hidden');
+				});
+
+				videoElement.addEventListener('pause', function() {
+					playButtonOverlay.classList.remove('hidden');
+				});
+
+				videoElement.addEventListener('ended', function() {
+					playButtonOverlay.classList.remove('hidden');
+				});
+			}
 		</script>
 		
 		<script type="text/javascript" src="./js/stars.js"></script>
