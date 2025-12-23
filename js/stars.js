@@ -103,45 +103,60 @@ MiniStar.prototype.update = function() {
     this.opacity -= 0.0001 * this.ttl
 }
 
-// NEW: Create smooth, rounded mountains
-function createSmoothMountainRange(numPeaks, baseHeight, color) {
-    // Generate mountain peak points
-    const points = [];
-    const segmentWidth = canvas.width / numPeaks;
+// Create STATIC mountain image (drawn once, not every frame)
+let mountainCanvas;
+
+function createMountainCanvas() {
+    // Create an offscreen canvas for mountains
+    mountainCanvas = document.createElement('canvas');
+    mountainCanvas.width = canvas.width;
+    mountainCanvas.height = canvas.height;
+    const mCtx = mountainCanvas.getContext('2d');
     
-    for (let i = 0; i <= numPeaks; i++) {
-        const x = i * segmentWidth;
-        const heightVariation = Math.sin(i * 0.5) * (baseHeight * 0.3) + Math.random() * (baseHeight * 0.15);
-        const y = canvas.height - baseHeight - heightVariation;
-        points.push({ x, y });
+    // Function to draw a smooth mountain layer
+    function drawMountainLayer(numPeaks, baseHeight, color, seed) {
+        const points = [];
+        const segmentWidth = mountainCanvas.width / (numPeaks - 1);
+        
+        // Create mountain peak points with smooth variation
+        for (let i = 0; i < numPeaks; i++) {
+            const x = i * segmentWidth;
+            const heightVar = Math.sin((i + seed) * 0.8) * (baseHeight * 0.2);
+            const y = mountainCanvas.height - baseHeight + heightVar;
+            points.push({ x, y });
+        }
+        
+        // Draw smooth mountain silhouette
+        mCtx.beginPath();
+        mCtx.moveTo(-100, mountainCanvas.height);
+        
+        for (let i = 0; i < points.length - 1; i++) {
+            const curr = points[i];
+            const next = points[i + 1];
+            
+            // Calculate control points for smooth curve
+            const cp1x = curr.x + (next.x - curr.x) / 3;
+            const cp1y = curr.y;
+            const cp2x = curr.x + 2 * (next.x - curr.x) / 3;
+            const cp2y = next.y;
+            
+            if (i === 0) {
+                mCtx.lineTo(curr.x, curr.y);
+            }
+            
+            mCtx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, next.x, next.y);
+        }
+        
+        mCtx.lineTo(mountainCanvas.width + 100, mountainCanvas.height);
+        mCtx.closePath();
+        mCtx.fillStyle = color;
+        mCtx.fill();
     }
     
-    // Draw smooth curve through points
-    c.beginPath();
-    c.moveTo(0, canvas.height);
-    
-    // Start from first point
-    c.lineTo(points[0].x, points[0].y);
-    
-    // Draw smooth curves between peaks using quadratic curves
-    for (let i = 1; i < points.length; i++) {
-        const prev = points[i - 1];
-        const curr = points[i];
-        
-        // Control point for smooth curve
-        const cpX = (prev.x + curr.x) / 2;
-        const cpY = (prev.y + curr.y) / 2;
-        
-        c.quadraticCurveTo(cpX, cpY, curr.x, curr.y);
-    }
-    
-    // Close the path
-    c.lineTo(canvas.width, canvas.height);
-    c.lineTo(0, canvas.height);
-    
-    c.fillStyle = color;
-    c.fill();
-    c.closePath();
+    // Draw three layers of mountains
+    drawMountainLayer(6, canvas.height * 0.65, '#384551', 1);
+    drawMountainLayer(8, canvas.height * 0.50, '#2B3843', 2);
+    drawMountainLayer(10, canvas.height * 0.35, '#26333E', 3);
 }
 
 // Implementation
@@ -168,11 +183,14 @@ function init() {
         const radius = Math.random() * 3
         backgroundStars.push(new Star(x, y, radius, 'white'))
     }
+    
+    // Create static mountains once
+    createMountainCanvas();
 }
 
 // Animation Loop
 function animate() {
-    c.clearRect(0, 0, 0, canvas.height)
+    c.clearRect(0, 0, canvas.width, canvas.height)
     c.fillStyle = backgroundGradient
     c.fillRect(0, 0, canvas.width, canvas.height)
 
@@ -180,10 +198,10 @@ function animate() {
         backgroundStar.draw()
     })
 
-    // Draw smooth mountains with rounded peaks
-    if(flag) createSmoothMountainRange(4, canvas.height * 0.7, '#384551')
-    if(flag) createSmoothMountainRange(5, canvas.height * 0.6, '#2B3843')
-    if(flag) createSmoothMountainRange(6, canvas.height * 0.4, '#26333E')
+    // Draw the pre-rendered mountain image (no regeneration!)
+    if(flag && mountainCanvas) {
+        c.drawImage(mountainCanvas, 0, 0);
+    }
     
     c.fillStyle = '#182028'
     c.fillRect(0, canvas.height - groundHeight, canvas.width, groundHeight)
