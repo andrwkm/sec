@@ -103,60 +103,76 @@ MiniStar.prototype.update = function() {
     this.opacity -= 0.0001 * this.ttl
 }
 
-// Create STATIC mountain image (drawn once, not every frame)
+// Create STATIC mountain range with distinct peaks
 let mountainCanvas;
 
 function createMountainCanvas() {
-    // Create an offscreen canvas for mountains
     mountainCanvas = document.createElement('canvas');
     mountainCanvas.width = canvas.width;
     mountainCanvas.height = canvas.height;
     const mCtx = mountainCanvas.getContext('2d');
     
-    // Function to draw a smooth mountain layer
-    function drawMountainLayer(numPeaks, baseHeight, color, seed) {
+    // Function to create a mountain range with visible peaks
+    function drawMountainRange(numPeaks, baseY, peakHeight, color, roughness) {
         const points = [];
-        const segmentWidth = mountainCanvas.width / (numPeaks - 1);
+        const spacing = mountainCanvas.width / (numPeaks + 1);
         
-        // Create mountain peak points with smooth variation
-        for (let i = 0; i < numPeaks; i++) {
-            const x = i * segmentWidth;
-            const heightVar = Math.sin((i + seed) * 0.8) * (baseHeight * 0.2);
-            const y = mountainCanvas.height - baseHeight + heightVar;
+        // Create peak points
+        for (let i = 0; i <= numPeaks + 1; i++) {
+            const x = i * spacing;
+            let y;
+            
+            if (i === 0 || i === numPeaks + 1) {
+                // Edge points at base
+                y = baseY;
+            } else {
+                // Create peaks with variation
+                const peakVariation = (Math.random() - 0.5) * roughness;
+                y = baseY - peakHeight + peakVariation;
+            }
+            
             points.push({ x, y });
         }
         
-        // Draw smooth mountain silhouette
+        // Draw the mountain range
         mCtx.beginPath();
-        mCtx.moveTo(-100, mountainCanvas.height);
+        mCtx.moveTo(-50, mountainCanvas.height);
         
+        // Draw to first point
+        mCtx.lineTo(points[0].x, points[0].y);
+        
+        // Create smooth curves between peaks
         for (let i = 0; i < points.length - 1; i++) {
             const curr = points[i];
             const next = points[i + 1];
+            const midX = (curr.x + next.x) / 2;
+            const midY = (curr.y + next.y) / 2;
             
-            // Calculate control points for smooth curve
-            const cp1x = curr.x + (next.x - curr.x) / 3;
-            const cp1y = curr.y;
-            const cp2x = curr.x + 2 * (next.x - curr.x) / 3;
-            const cp2y = next.y;
+            // Create valley between peaks
+            const valleyDepth = peakHeight * 0.4;
+            const controlY = midY + valleyDepth;
             
-            if (i === 0) {
-                mCtx.lineTo(curr.x, curr.y);
-            }
-            
-            mCtx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, next.x, next.y);
+            mCtx.quadraticCurveTo(midX, controlY, next.x, next.y);
         }
         
-        mCtx.lineTo(mountainCanvas.width + 100, mountainCanvas.height);
+        // Close the shape
+        mCtx.lineTo(mountainCanvas.width + 50, mountainCanvas.height);
+        mCtx.lineTo(-50, mountainCanvas.height);
         mCtx.closePath();
+        
         mCtx.fillStyle = color;
         mCtx.fill();
     }
     
-    // Draw three layers of mountains
-    drawMountainLayer(6, canvas.height * 0.65, '#384551', 1);
-    drawMountainLayer(8, canvas.height * 0.50, '#2B3843', 2);
-    drawMountainLayer(10, canvas.height * 0.35, '#26333E', 3);
+    // Draw three layers of mountain ranges (back to front)
+    // Back mountains - smaller, lighter
+    drawMountainRange(4, canvas.height * 0.75, canvas.height * 0.25, '#384551', 40);
+    
+    // Middle mountains - medium size
+    drawMountainRange(5, canvas.height * 0.80, canvas.height * 0.35, '#2B3843', 50);
+    
+    // Front mountains - tallest, darkest
+    drawMountainRange(6, canvas.height * 0.85, canvas.height * 0.45, '#26333E', 60);
 }
 
 // Implementation
@@ -198,7 +214,7 @@ function animate() {
         backgroundStar.draw()
     })
 
-    // Draw the pre-rendered mountain image (no regeneration!)
+    // Draw the pre-rendered mountain image
     if(flag && mountainCanvas) {
         c.drawImage(mountainCanvas, 0, 0);
     }
