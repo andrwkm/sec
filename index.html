@@ -4,11 +4,65 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 		<meta charset="UTF-8">
 		<title>Pooka</title>
-		<link rel="stylesheet" type="text/css" href="./css/format.css?v=15">
+		<link rel="stylesheet" type="text/css" href="./css/format.css?v=16">
+		<style>
+			/* Music start overlay for mobile */
+			#musicOverlay {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: rgba(0, 0, 0, 0.8);
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				z-index: 10000;
+				cursor: pointer;
+			}
+
+			#musicOverlay.hidden {
+				display: none;
+			}
+
+			#musicOverlay h3 {
+				color: white;
+				font-size: 2em;
+				margin-bottom: 20px;
+				text-align: center;
+				padding: 0 20px;
+			}
+
+			#musicOverlay p {
+				color: #fff;
+				font-size: 1.2em;
+				text-align: center;
+				padding: 0 20px;
+			}
+
+			.music-icon {
+				font-size: 4em;
+				margin-bottom: 20px;
+				animation: pulse 1.5s ease-in-out infinite;
+			}
+
+			@keyframes pulse {
+				0%, 100% { transform: scale(1); }
+				50% { transform: scale(1.1); }
+			}
+		</style>
 	</head>
 
 	<body style="margin:0px; overflow-x: hidden;">
-		<audio autoplay loop>
+		<!-- Music Start Overlay -->
+		<div id="musicOverlay">
+			<div class="music-icon">🎵</div>
+			<h3>Tap to Start</h3>
+			<p>Tap anywhere to play music</p>
+		</div>
+
+		<audio id="backgroundMusic" loop>
 			<source src="music/music.mp3" type="audio/mpeg">
 			Your browser does not support the audio.
 		</audio>
@@ -43,8 +97,8 @@
 
 		<!-- Romantic Video Section -->
 		<section id="videoSection">
-			<h2>My beautiful plum</h2>
-			<p>Every second is a joy to be with you. Here's to the start of many more adventures.</p>
+			<h2>Our Special Moments ♥</h2>
+			<p>Every moment with you is a treasure. Here's to all the memories we've made and all the adventures yet to come.</p>
 			
 			<div class="video-container">
 				<div class="play-overlay" id="playButton"></div>
@@ -64,18 +118,45 @@
 				"pic/pic1.png", "pic/pic2.png", "pic/pic3.png", "pic/pic4.png", 
 				"pic/pic5.png", "pic/pic6.png", "pic/pic7.png", "pic/pic8.png", 
 				"pic/pic9.png", "pic/pic10.png", "pic/pic11.png", "pic/pic12.png", 
-				"pic/pic13.png", "pic/pic14.png", "pic/pic15.png", "pic/pic16.png", 
-				"pic/pic17.png"
+				"pic/pic13.png", "pic/pic14.png", "pic/pic15.png", "pic/pic16.png"
 			];
 			var imageIndex = 0;
 			var txtArray = [
-				"Happy 24 months my love!!", "2", "Caption 3", "Caption 4", "Caption 5", 
+				"Caption 1", "Caption 2", "Caption 3", "Caption 4", "Caption 5", 
 				"Caption 6", "Caption 7", "Caption 8", "Caption 9", "Caption 10", 
 				"Caption 11", "Caption 12", "Caption 13", "Caption 14", "Caption 15", 
-				"Caption 16", "Caption 17"
+				"Caption 16"
 			];
 			var len = imageArray.length;
 			var t = 0;
+
+			// Music handling for mobile
+			const musicOverlay = document.getElementById('musicOverlay');
+			const backgroundMusic = document.getElementById('backgroundMusic');
+			let musicStarted = false;
+
+			function startMusic() {
+				if (!musicStarted) {
+					backgroundMusic.play().then(() => {
+						musicStarted = true;
+						musicOverlay.classList.add('hidden');
+					}).catch(error => {
+						console.log('Music autoplay failed:', error);
+					});
+				}
+			}
+
+			// Try autoplay first (works on desktop)
+			backgroundMusic.play().then(() => {
+				musicStarted = true;
+				musicOverlay.classList.add('hidden');
+			}).catch(() => {
+				// Autoplay failed (mobile) - show overlay
+				musicOverlay.style.display = 'flex';
+			});
+
+			// Start music on tap/click
+			musicOverlay.addEventListener('click', startMusic);
 
 			// Video play button functionality
 			const videoElement = document.getElementById('romanticVideo');
