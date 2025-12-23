@@ -103,7 +103,7 @@ MiniStar.prototype.update = function() {
     this.opacity -= 0.0001 * this.ttl
 }
 
-// Create STATIC mountain range with distinct peaks
+// Create STATIC mountain range with TRIANGULAR peaks
 let mountainCanvas;
 
 function createMountainCanvas() {
@@ -112,67 +112,60 @@ function createMountainCanvas() {
     mountainCanvas.height = canvas.height;
     const mCtx = mountainCanvas.getContext('2d');
     
-    // Function to create a mountain range with visible peaks
-    function drawMountainRange(numPeaks, baseY, peakHeight, color, roughness) {
-        const points = [];
-        const spacing = mountainCanvas.width / (numPeaks + 1);
-        
-        // Create peak points
-        for (let i = 0; i <= numPeaks + 1; i++) {
-            const x = i * spacing;
-            let y;
-            
-            if (i === 0 || i === numPeaks + 1) {
-                // Edge points at base
-                y = baseY;
-            } else {
-                // Create peaks with variation
-                const peakVariation = (Math.random() - 0.5) * roughness;
-                y = baseY - peakHeight + peakVariation;
-            }
-            
-            points.push({ x, y });
-        }
-        
-        // Draw the mountain range
+    // Draw triangular mountain peaks with slightly rounded tops
+    function drawTriangularMountains(numPeaks, baseY, minHeight, maxHeight, color) {
         mCtx.beginPath();
-        mCtx.moveTo(-50, mountainCanvas.height);
+        mCtx.moveTo(0, mountainCanvas.height);
+        mCtx.lineTo(0, baseY);
         
-        // Draw to first point
-        mCtx.lineTo(points[0].x, points[0].y);
+        const peakSpacing = mountainCanvas.width / numPeaks;
         
-        // Create smooth curves between peaks
-        for (let i = 0; i < points.length - 1; i++) {
-            const curr = points[i];
-            const next = points[i + 1];
-            const midX = (curr.x + next.x) / 2;
-            const midY = (curr.y + next.y) / 2;
+        for (let i = 0; i < numPeaks; i++) {
+            // Calculate peak position
+            const peakX = (i + 0.5) * peakSpacing;
+            const peakHeight = minHeight + Math.random() * (maxHeight - minHeight);
+            const peakY = baseY - peakHeight;
             
-            // Create valley between peaks
-            const valleyDepth = peakHeight * 0.4;
-            const controlY = midY + valleyDepth;
+            // Left side of mountain (going up)
+            const leftBaseX = i * peakSpacing;
+            const leftBaseY = baseY;
             
-            mCtx.quadraticCurveTo(midX, controlY, next.x, next.y);
+            // Right side of mountain (going down)
+            const rightBaseX = (i + 1) * peakSpacing;
+            const rightBaseY = baseY;
+            
+            // Draw left slope with slight curve near peak
+            const leftControlX = peakX - peakSpacing * 0.15;
+            const leftControlY = peakY + 20;
+            
+            mCtx.lineTo(leftBaseX, leftBaseY);
+            mCtx.lineTo(leftControlX, leftControlY);
+            
+            // Rounded peak top
+            const roundness = 15;
+            mCtx.arcTo(peakX, peakY, peakX + roundness, peakY + roundness, roundness);
+            
+            // Draw right slope
+            const rightControlX = peakX + peakSpacing * 0.15;
+            const rightControlY = peakY + 20;
+            
+            mCtx.lineTo(rightControlX, rightControlY);
+            mCtx.lineTo(rightBaseX, rightBaseY);
         }
         
-        // Close the shape
-        mCtx.lineTo(mountainCanvas.width + 50, mountainCanvas.height);
-        mCtx.lineTo(-50, mountainCanvas.height);
+        // Close the path
+        mCtx.lineTo(mountainCanvas.width, baseY);
+        mCtx.lineTo(mountainCanvas.width, mountainCanvas.height);
         mCtx.closePath();
         
         mCtx.fillStyle = color;
         mCtx.fill();
     }
     
-    // Draw three layers of mountain ranges (back to front)
-    // Back mountains - smaller, lighter
-    drawMountainRange(4, canvas.height * 0.75, canvas.height * 0.25, '#384551', 40);
-    
-    // Middle mountains - medium size
-    drawMountainRange(5, canvas.height * 0.80, canvas.height * 0.35, '#2B3843', 50);
-    
-    // Front mountains - tallest, darkest
-    drawMountainRange(6, canvas.height * 0.85, canvas.height * 0.45, '#26333E', 60);
+    // Draw three layers of triangular mountains (back to front)
+    drawTriangularMountains(3, canvas.height * 0.70, canvas.height * 0.15, canvas.height * 0.25, '#384551');
+    drawTriangularMountains(4, canvas.height * 0.75, canvas.height * 0.20, canvas.height * 0.35, '#2B3843');
+    drawTriangularMountains(5, canvas.height * 0.80, canvas.height * 0.25, canvas.height * 0.45, '#26333E');
 }
 
 // Implementation
@@ -200,7 +193,6 @@ function init() {
         backgroundStars.push(new Star(x, y, radius, 'white'))
     }
     
-    // Create static mountains once
     createMountainCanvas();
 }
 
@@ -214,7 +206,6 @@ function animate() {
         backgroundStar.draw()
     })
 
-    // Draw the pre-rendered mountain image
     if(flag && mountainCanvas) {
         c.drawImage(mountainCanvas, 0, 0);
     }
