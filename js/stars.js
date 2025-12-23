@@ -1,5 +1,3 @@
-//import utils from "./utils"
-
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 
@@ -11,20 +9,6 @@ window.addEventListener("resize", function() {
     canvas.height = window.innerHeight;     
     init()
 });
-
-/*
-const mouse = {
-    x: innerWidth / 2,
-    y: innerHeight / 2
-}
-
-
-// Event Listeners
-addEventListener('mousemove', event => {
-    mouse.x = event.clientX
-    mouse.y = event.clientY
-})
-*/
 
 // Objects
 function Star(x, y, radius, color) {
@@ -55,7 +39,6 @@ Star.prototype.draw = function() {
 Star.prototype.update = function() {
     this.draw()
 
-    //When ball hits bottom of screen
     if(this.y + this.radius + this.velocity.y > canvas.height - groundHeight){
         this.velocity.y = -this.velocity.y * this.friction
         this.shatter()
@@ -64,7 +47,6 @@ Star.prototype.update = function() {
         this.velocity.y += this.gravity
     }
 
-    //Hits side of screen
     if(this.x + this.radius + this.velocity.x > canvas.width || this.x - this.radius <= 0){
         this.velocity.x = -this.velocity.x * this.friction
         this.shatter()
@@ -72,7 +54,6 @@ Star.prototype.update = function() {
 
     this.x += this.velocity.x
     this.y += this.velocity.y
-
 }
 
 Star.prototype.shatter = function(){
@@ -80,7 +61,6 @@ Star.prototype.shatter = function(){
     for(let i = 0; i < 8; i++){
         miniStars.push(new MiniStar(this.x, this.y, 2))
     }
-
 }
 
 function MiniStar(x, y, radius, color){
@@ -123,18 +103,45 @@ MiniStar.prototype.update = function() {
     this.opacity -= 0.0001 * this.ttl
 }
 
-function creatMountainRange(mountainAmount, height, color){
-    for(let i = 0; i < mountainAmount; i++){
-        const mountainWidth = canvas.width / mountainAmount
-        c.beginPath()
-        c.moveTo(i * mountainWidth, canvas.height)
-        c.lineTo(i * mountainWidth + mountainWidth + 0.2*canvas.height, canvas.height)
-        c.lineTo(i * mountainWidth + mountainWidth / 2, canvas.height - height)
-        c.lineTo(i * mountainWidth - 0.2*canvas.height, canvas.height)
-        c.fillStyle = color
-        c.fill()
-        c.closePath()
+// NEW: Create smooth, rounded mountains
+function createSmoothMountainRange(numPeaks, baseHeight, color) {
+    // Generate mountain peak points
+    const points = [];
+    const segmentWidth = canvas.width / numPeaks;
+    
+    for (let i = 0; i <= numPeaks; i++) {
+        const x = i * segmentWidth;
+        const heightVariation = Math.sin(i * 0.5) * (baseHeight * 0.3) + Math.random() * (baseHeight * 0.15);
+        const y = canvas.height - baseHeight - heightVariation;
+        points.push({ x, y });
     }
+    
+    // Draw smooth curve through points
+    c.beginPath();
+    c.moveTo(0, canvas.height);
+    
+    // Start from first point
+    c.lineTo(points[0].x, points[0].y);
+    
+    // Draw smooth curves between peaks using quadratic curves
+    for (let i = 1; i < points.length; i++) {
+        const prev = points[i - 1];
+        const curr = points[i];
+        
+        // Control point for smooth curve
+        const cpX = (prev.x + curr.x) / 2;
+        const cpY = (prev.y + curr.y) / 2;
+        
+        c.quadraticCurveTo(cpX, cpY, curr.x, curr.y);
+    }
+    
+    // Close the path
+    c.lineTo(canvas.width, canvas.height);
+    c.lineTo(0, canvas.height);
+    
+    c.fillStyle = color;
+    c.fill();
+    c.closePath();
 }
 
 // Implementation
@@ -149,6 +156,7 @@ let ticker = 0
 let randomSpawnRate = 75
 const groundHeight = 0.09 * canvas.height
 let inf = 1e9
+
 function init() {
     stars = []
     miniStars = []
@@ -172,11 +180,14 @@ function animate() {
         backgroundStar.draw()
     })
 
-    if(flag) creatMountainRange(1, canvas.height * 0.7, '#384551')
-    if(flag) creatMountainRange(2, canvas.height * 0.6, '#2B3843')
-    if(flag) creatMountainRange(3, canvas.height * 0.4, '#26333E')
+    // Draw smooth mountains with rounded peaks
+    if(flag) createSmoothMountainRange(4, canvas.height * 0.7, '#384551')
+    if(flag) createSmoothMountainRange(5, canvas.height * 0.6, '#2B3843')
+    if(flag) createSmoothMountainRange(6, canvas.height * 0.4, '#26333E')
+    
     c.fillStyle = '#182028'
     c.fillRect(0, canvas.height - groundHeight, canvas.width, groundHeight)
+    
     stars.forEach((star, index) => {
         star.update();
         if(star.radius == 0){
