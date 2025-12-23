@@ -132,15 +132,16 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
+	justify-content: flex-start; /* Changed from center to flex-start */
 	text-align: center;
-	padding-top: 120px;
+	padding-top: 150px; /* Increased top padding */
+	padding-bottom: 180px; /* Space for heart button */
 	min-height: 100vh;
 }
 
 #img {
 	max-width: 50vw;
-	max-height: 50vh;
+	max-height: 45vh; /* Reduced from 50vh to make room */
 	width: auto;
 	height: auto;
 	object-fit: contain;
@@ -324,6 +325,7 @@ canvas {
 
 	#imgTxt {
 		padding-top: 100px;
+		padding-bottom: 200px;
 	}
 
 	#heartTxt {
