@@ -232,7 +232,6 @@ canvas {
 	width: 100%;
 	height: auto;
 	display: block;
-	transform: rotate(90deg);
 	transform-origin: center center;
 }
 
