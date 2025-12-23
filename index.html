@@ -4,7 +4,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 		<meta charset="UTF-8">
 		<title>Pooka</title>
-		<link rel="stylesheet" type="text/css" href="./css/format.css?v=11">
+		<link rel="stylesheet" type="text/css" href="./css/format.css?v=12">
 		<style>
 			/* Canvas background */
 			canvas {
@@ -38,7 +38,7 @@
 				justify-content: center;
 				text-align: center;
 				padding-top: 120px;
-				min-height: 70vh;
+				min-height: 100vh;
 			}
 
 			/* Caption text */
@@ -59,6 +59,12 @@
 				transform: translateX(-50%);
 				z-index: 20;
 				text-align: center;
+				transition: opacity 0.3s ease;
+			}
+
+			#content.hidden {
+				opacity: 0;
+				pointer-events: none;
 			}
 
 			#together {
@@ -86,6 +92,12 @@
 				flex-direction: column;
 				align-items: center;
 				justify-content: center;
+				transition: opacity 0.3s ease;
+			}
+
+			#heartTxt.hidden {
+				opacity: 0;
+				pointer-events: none;
 			}
 
 			#clickMe {
@@ -117,6 +129,12 @@
 				transform: translateX(-50%);
 				z-index: 15;
 				text-align: center;
+				transition: opacity 0.3s ease;
+			}
+
+			#typeDiv.hidden {
+				opacity: 0;
+				pointer-events: none;
 			}
 
 			#txt1, #txt2 {
@@ -136,7 +154,7 @@
 				justify-content: center;
 				padding: 80px 20px;
 				background: linear-gradient(135deg, rgba(255, 182, 193, 0.15) 0%, rgba(255, 218, 224, 0.15) 100%);
-				margin-top: 30vh;
+				margin-top: 0;
 			}
 
 			#videoSection h2 {
@@ -279,7 +297,6 @@
 				}
 
 				#videoSection {
-					margin-top: 20vh;
 					padding: 60px 15px;
 				}
 
@@ -414,6 +431,32 @@
 					playButtonOverlay.classList.remove('hidden');
 				});
 			}
+
+			// Hide fixed elements when video section is in view
+			const videoSection = document.getElementById('videoSection');
+			const timerElement = document.getElementById('content');
+			const heartElement = document.getElementById('heartTxt');
+			const typeElement = document.getElementById('typeDiv');
+
+			function checkVideoInView() {
+				const rect = videoSection.getBoundingClientRect();
+				const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+				
+				if (isInView) {
+					timerElement.classList.add('hidden');
+					heartElement.classList.add('hidden');
+					typeElement.classList.add('hidden');
+				} else {
+					timerElement.classList.remove('hidden');
+					heartElement.classList.remove('hidden');
+					typeElement.classList.remove('hidden');
+				}
+			}
+
+			// Check on scroll
+			window.addEventListener('scroll', checkVideoInView);
+			// Check on load
+			checkVideoInView();
 		</script>
 		
 		<script type="text/javascript" src="./js/stars.js"></script>
