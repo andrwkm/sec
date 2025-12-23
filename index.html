@@ -3,8 +3,91 @@
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 		<meta charset="UTF-8">
-		<title>First anniversary of love</title>
-		<link rel="stylesheet" type="text/css" href="./css/format.css">
+		<title>Pooka</title>
+		<link rel="stylesheet" type="text/css" href="./css/format.css?v=4">
+		<style>
+			/* Fix image size */
+			#img {
+				max-width: 50vw;
+				max-height: 50vh;
+				width: auto;
+				height: auto;
+				object-fit: contain;
+				display: block;
+				margin: 20px auto;
+			}
+
+			/* Position image container properly */
+			#imgTxt {
+				position: relative;
+				z-index: 10;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: flex-start;
+				text-align: center;
+				padding-top: 80px;
+				min-height: 60vh;
+			}
+
+			/* Caption text */
+			#Txt {
+				font-size: 1.3em;
+				margin-bottom: 20px;
+				color: #fff;
+				text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+				display: block;
+				z-index: 11;
+			}
+
+			/* Timer positioning */
+			#content {
+				position: fixed;
+				top: 20px;
+				right: 20px;
+				z-index: 5;
+				text-align: right;
+			}
+
+			#together {
+				color: #fff;
+				font-size: 1.2em;
+				margin-bottom: 10px;
+				text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+			}
+
+			#timer {
+				color: #fff;
+				font-size: 1em;
+				text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+			}
+
+			/* Heart button positioning */
+			#heartTxt {
+				position: relative;
+				z-index: 15;
+			}
+
+			/* Mobile responsive */
+			@media (max-width: 768px) {
+				#img {
+					max-width: 80vw;
+					max-height: 40vh;
+				}
+				
+				#content {
+					position: relative;
+					top: auto;
+					right: auto;
+					text-align: center;
+					margin-top: 30px;
+				}
+
+				#imgTxt {
+					padding-top: 40px;
+				}
+			}
+		</style>
 	</head>
 
 	<body style="margin:0px">
@@ -13,17 +96,7 @@
 			Your browser does not support the audio.
 		</audio>
 		<canvas></canvas>
-		<div id="imgTxt">
-			<span id="Txt"></span> <br />
-			<span id="tmp"></span>
-			<img id="img" src="">
-		</div>
-		<div id="heartTxt">
-			<span id="clickMe">Click!</span>
-			<div id="heart">
-				<button id="button" onclick="play()"></button>
-			</div>
-		</div>
+		
 		<div id="content">
 			<h2 id="together">We have been together</h2>
 			<div id="timer">
@@ -34,22 +107,56 @@
 			</div>
 		</div>
 
-    	<div id = "typeDiv">
-        	<span id="txt1"></span> <br />
-        	<span id="txt2"></span>
-    	</div>		
+		<div id="imgTxt">
+			<span id="Txt"></span>
+			<img id="img" src="" alt="Memory">
+		</div>
 
-		<script >
+		<div id="heartTxt">
+			<span id="clickMe">Click!</span>
+			<div id="heart">
+				<button id="button" onclick="play()"></button>
+			</div>
+		</div>
+
+		<div id="typeDiv">
+			<span id="txt1"></span> <br />
+			<span id="txt2"></span>
+		</div>		
+
+		<script>
 			var ok = 0;
 			var flag = 1;
 			var myImage = document.getElementById("img");
 			var myTxt = document.getElementById("Txt");
-			var imageArray = ["pic/pic1.png", "pic/pic2.png", "pic/pic3.png", "pic/pic4.png", "pic/pic5.png", "pic/pic6.png", 
-			"pic/pic7.png", "pic/pic8.png", "pic/pic9.png", "pic/pic10.png", "pic/pic11.png", "pic/pic12.png", "pic/pic13.png",
-			"pic/pic14.png", "pic/pic15.png", "pic/pic16.png", "pic/pic17.png"];
+			var imageArray = [
+				"pic/pic1.png", "pic/pic2.png", "pic/pic3.png", "pic/pic4.png", 
+				"pic/pic5.png", "pic/pic6.png", "pic/pic7.png", "pic/pic8.png", 
+				"pic/pic9.png", "pic/pic10.png", "pic/pic11.png", "pic/pic12.png", 
+				"pic/pic13.png", "pic/pic14.png", "pic/pic15.png", "pic/pic16.png", 
+				"pic/pic17.png"
+			];
 			var imageIndex = 0;
-			var txtArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17"];
-			 var len = imageArray.length;
+			var txtArray = [
+				"Caption 1", 
+				"Caption 2", 
+				"Caption 3", 
+				"Caption 4", 
+				"Caption 5", 
+				"Caption 6", 
+				"Caption 7", 
+				"Caption 8", 
+				"Caption 9", 
+				"Caption 10", 
+				"Caption 11", 
+				"Caption 12", 
+				"Caption 13", 
+				"Caption 14", 
+				"Caption 15", 
+				"Caption 16", 
+				"Caption 17"
+			];
+			var len = imageArray.length;
 			var t = 0;
 		</script>
 		
